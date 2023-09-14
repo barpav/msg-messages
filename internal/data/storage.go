@@ -22,7 +22,11 @@ type query interface {
 }
 
 func queriesToPrepare() []query {
-	return []query{}
+	return []query{
+		queryCreateMessage{},
+		queryCreateAttachment{},
+		queryWriteUpdate{},
+	}
 }
 
 func (s *Storage) Open() (err error) {

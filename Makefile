@@ -31,3 +31,15 @@ user:
 	localhost:8081
 session:
 	curl -v -X POST -H "Authorization: Basic amFuZTpNeTFzdEdvb2RQYXNzd29yZA==" localhost:8082
+# make message KEY=session-key TO=userId TXT="Message text"
+message:
+	curl -v -X POST	-H "Content-Type: application/vnd.newPersonalMessage.v1+json" \
+	-H "Authorization: Bearer $(KEY)" \
+	-d '{"to": "$(TO)", "text": "$(TXT)"}' \
+	localhost:8080
+# make message KEY=session-key TO=userId [TXT="Message text"] [F=file-id]
+message-f:
+	curl -v -X POST	-H "Content-Type: application/vnd.newPersonalMessage.v1+json" \
+	-H "Authorization: Bearer $(KEY)" \
+	-d '{"to": "$(TO)", "text": "$(TXT)", "files": ["$(F)"]}' \
+	localhost:8080
