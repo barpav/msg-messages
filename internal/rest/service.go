@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/barpav/msg-messages/internal/rest/models"
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog/log"
 )
@@ -23,6 +24,7 @@ type Authenticator interface {
 }
 
 type Storage interface {
+	CreateNewPersonalMessageV1(ctx context.Context, sender string, data *models.NewPersonalMessageV1) (id int64, timestamp int64, err error)
 }
 
 type FileStats interface {
