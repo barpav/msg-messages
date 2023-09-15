@@ -37,9 +37,14 @@ message:
 	-H "Authorization: Bearer $(KEY)" \
 	-d '{"to": "$(TO)", "text": "$(TXT)"}' \
 	localhost:8080
-# make message KEY=session-key TO=userId [TXT="Message text"] [F=file-id]
+# make message KEY=session-key TO=userId TXT="Message text" F=file-id
 message-f:
 	curl -v -X POST	-H "Content-Type: application/vnd.newPersonalMessage.v1+json" \
 	-H "Authorization: Bearer $(KEY)" \
 	-d '{"to": "$(TO)", "text": "$(TXT)", "files": ["$(F)"]}' \
 	localhost:8080
+# make sync KEY=session-key A=after L=limit
+sync:
+	curl -v -H "Authorization: Bearer $(KEY)" \
+	-H "Accept: application/vnd.messageUpdates.v1+json" \
+	"localhost:8080?after=$(A)&limit=$(L)"

@@ -26,6 +26,7 @@ func queriesToPrepare() []query {
 		queryCreateMessage{},
 		queryCreateAttachment{},
 		queryWriteUpdate{},
+		queryGetMessageUpdatesV1{},
 	}
 }
 
