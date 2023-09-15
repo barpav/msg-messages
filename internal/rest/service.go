@@ -25,6 +25,7 @@ type Authenticator interface {
 
 type Storage interface {
 	CreateNewPersonalMessageV1(ctx context.Context, sender string, data *models.NewPersonalMessageV1) (id int64, timestamp int64, err error)
+	GetMessageUpdatesV1(ctx context.Context, userId string, after int64, limit int) (*models.MessageUpdatesV1, error)
 }
 
 type FileStats interface {
