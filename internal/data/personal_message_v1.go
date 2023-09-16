@@ -14,8 +14,8 @@ func (q queryGetPersonalMessageV1) text() string {
 	SELECT
 		id,
 		event_timestamp,
-		sender,
-		receiver,
+		CASE WHEN COALESCE(is_deleted, false) THEN '' ELSE sender END,
+		CASE WHEN COALESCE(is_deleted, false) THEN '' ELSE receiver END,
 		created,
 		edited,
 		read_at,
