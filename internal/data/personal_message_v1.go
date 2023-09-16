@@ -12,7 +12,6 @@ type queryGetPersonalMessageV1 struct{}
 func (q queryGetPersonalMessageV1) text() string {
 	return `
 	SELECT
-		id,
 		event_timestamp,
 		CASE WHEN COALESCE(is_deleted, false) THEN '' ELSE sender END,
 		CASE WHEN COALESCE(is_deleted, false) THEN '' ELSE receiver END,
@@ -38,9 +37,19 @@ func (q queryGetPersonalMessageAttachmentsV1) text() string {
 }
 
 func (s *Storage) PersonalMessageV1(ctx context.Context, userId string, messageId int64) (*models.PersonalMessageV1, error) {
-	message := &models.PersonalMessageV1{Files: make([]string, 0)}
-	err := s.queries[queryGetPersonalMessageV1{}].QueryRowContext(ctx, messageId, userId).Scan(
-		&message.Id,
+	row := s.queries[queryGetPersonalMessageV1{}].QueryRowContext(ctx, messageId, userId)
+	err := row.Err()
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	message := &models.PersonalMessageV1{Id: messageId, Files: make([]string, 0)}
+	err = row.Scan(
 		&message.Timestamp,
 		&message.From,
 		&message.To,
@@ -52,10 +61,6 @@ func (s *Storage) PersonalMessageV1(ctx context.Context, userId string, messageI
 	)
 
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
-
 		return nil, err
 	}
 
