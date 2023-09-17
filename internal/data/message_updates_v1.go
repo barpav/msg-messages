@@ -20,7 +20,7 @@ func (q queryGetMessageUpdatesV1) text() string {
 	`
 }
 
-func (s *Storage) GetMessageUpdatesV1(ctx context.Context, userId string, after int64, limit int) (*models.MessageUpdatesV1, error) {
+func (s *Storage) MessageUpdatesV1(ctx context.Context, userId string, after int64, limit int) (*models.MessageUpdatesV1, error) {
 	rows, err := s.queries[queryGetMessageUpdatesV1{}].QueryContext(ctx, userId, after, limit)
 
 	if err != nil {
