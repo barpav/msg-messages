@@ -7,7 +7,7 @@ CREATE TABLE messages (
     receiver varchar(50) NOT NULL,
     created timestamp,
     edited timestamp,
-    read_at timestamp,
+    is_read boolean,
     message_text text,
     is_deleted bool
 );
