@@ -78,8 +78,7 @@ func (s *Service) operations() *chi.Mux {
 	ops.Post("/", s.sendNewMessage)
 	ops.Get("/", s.syncMessages)
 	ops.Get("/{id}", s.getMessageData)
-	ops.Put("/{id}", s.editMessage)
-	ops.Patch("/{id}", s.markMessageAsRead)
+	ops.Patch("/{id}", s.modifyMessage)
 	ops.Delete("/{id}", s.deleteMessageData)
 
 	return ops
