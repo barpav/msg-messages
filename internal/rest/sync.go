@@ -32,7 +32,7 @@ func (s *Service) getMessageUpdatesV1(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var updates *models.MessageUpdatesV1
-	updates, err = s.storage.GetMessageUpdatesV1(r.Context(), authenticatedUser(r), after, limit)
+	updates, err = s.storage.MessageUpdatesV1(r.Context(), authenticatedUser(r), after, limit)
 
 	if err == nil {
 		w.Header().Set("Content-Type", mimeTypeMessageUpdatesV1)
