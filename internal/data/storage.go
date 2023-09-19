@@ -29,6 +29,8 @@ func queriesToPrepare() []query {
 		queryGetMessageUpdatesV1{},
 		queryGetPersonalMessageV1{},
 		queryGetPersonalMessageAttachmentsV1{},
+		queryEditMessageText{},
+		querySetMessageReadState{},
 	}
 }
 
