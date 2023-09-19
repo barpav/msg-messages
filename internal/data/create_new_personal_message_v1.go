@@ -64,13 +64,13 @@ func (s *Storage) CreateNewPersonalMessageV1(ctx context.Context, sender string,
 		}
 	}
 
-	_, err = tx.Stmt(s.queries[queryWriteUpdate{}]).ExecContext(ctx, sender, id, timestamp)
+	_, err = tx.Stmt(s.queries[queryWriteUpdate{}]).ExecContext(ctx, sender, timestamp, id)
 
 	if err != nil {
 		return 0, 0, fmt.Errorf("failed to write user '%s' update: %w", sender, err)
 	}
 
-	_, err = tx.Stmt(s.queries[queryWriteUpdate{}]).ExecContext(ctx, message.To, id, timestamp)
+	_, err = tx.Stmt(s.queries[queryWriteUpdate{}]).ExecContext(ctx, message.To, timestamp, id)
 
 	if err != nil {
 		return 0, 0, fmt.Errorf("failed to write user '%s' update: %w", message.To, err)

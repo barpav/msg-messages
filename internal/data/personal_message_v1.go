@@ -41,10 +41,6 @@ func (s *Storage) PersonalMessageV1(ctx context.Context, userId string, messageI
 	err := row.Err()
 
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
-
 		return nil, err
 	}
 
@@ -61,6 +57,10 @@ func (s *Storage) PersonalMessageV1(ctx context.Context, userId string, messageI
 	)
 
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 

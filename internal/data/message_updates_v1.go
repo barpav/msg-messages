@@ -33,7 +33,7 @@ func (s *Storage) MessageUpdatesV1(ctx context.Context, userId string, after int
 
 	for rows.Next() {
 		info := &models.MessageUpdateInfoV1{}
-		err = rows.Scan(&info.Id, &info.Timestamp)
+		err = rows.Scan(&info.Timestamp, &info.Id)
 
 		if err != nil {
 			return nil, err
