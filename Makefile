@@ -25,12 +25,18 @@ up-debug:
 down-debug:
 	sudo docker-compose -f compose-debug.yaml down
 
-user:
+jane:
 	curl -v -X POST	-H "Content-Type: application/vnd.newUser.v1+json" \
 	-d '{"id": "jane", "name": "Jane Doe", "password": "My1stGoodPassword"}' \
 	localhost:8081
-session:
+john:
+	curl -v -X POST	-H "Content-Type: application/vnd.newUser.v1+json" \
+	-d '{"id": "john", "name": "John Doe", "password": "My1stGoodPassword"}' \
+	localhost:8081
+session-jane:
 	curl -v -X POST -H "Authorization: Basic amFuZTpNeTFzdEdvb2RQYXNzd29yZA==" localhost:8082
+session-john:
+	curl -v -X POST -H "Authorization: Basic am9objpNeTFzdEdvb2RQYXNzd29yZA==" localhost:8082
 # make message KEY=session-key TO=userId TXT="Message text"
 message:
 	curl -v -X POST	-H "Content-Type: application/vnd.newPersonalMessage.v1+json" \
@@ -51,4 +57,18 @@ sync:
 # make get-message KEY=session-key ID=message-id
 get-message:
 	curl -v -H "Authorization: Bearer $(KEY)" \
+	"localhost:8080/$(ID)"
+# make edit-message KEY=session-key ID=message-id T=timestamp TXT="Message text"
+edit-message:
+	curl -v -X PATCH -H "Content-Type: application/vnd.editedMessageText.v1+json" \
+	-H "If-Match: $(T)" \
+	-H "Authorization: Bearer $(KEY)" \
+	-d '{"text": "$(TXT)"}' \
+	"localhost:8080/$(ID)"
+# make edit-message KEY=session-key ID=message-id T=timestamp R=true/false
+read-message:
+	curl -v -X PATCH -H "Content-Type: application/vnd.messageReadMark.v1+json" \
+	-H "If-Match: $(T)" \
+	-H "Authorization: Bearer $(KEY)" \
+	-d '{"read": $(R)}' \
 	"localhost:8080/$(ID)"
