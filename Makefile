@@ -65,10 +65,16 @@ edit-message:
 	-H "Authorization: Bearer $(KEY)" \
 	-d '{"text": "$(TXT)"}' \
 	"localhost:8080/$(ID)"
-# make edit-message KEY=session-key ID=message-id T=timestamp R=true/false
+# make read-message KEY=session-key ID=message-id T=timestamp R=true/false
 read-message:
 	curl -v -X PATCH -H "Content-Type: application/vnd.messageReadMark.v1+json" \
 	-H "If-Match: $(T)" \
 	-H "Authorization: Bearer $(KEY)" \
 	-d '{"read": $(R)}' \
+	"localhost:8080/$(ID)"
+# make delete-message KEY=session-key ID=message-id T=timestamp
+delete-message:
+	curl -v -X DELETE \
+	-H "If-Match: $(T)" \
+	-H "Authorization: Bearer $(KEY)" \
 	"localhost:8080/$(ID)"

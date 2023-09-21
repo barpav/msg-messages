@@ -29,6 +29,7 @@ type Storage interface {
 	PersonalMessageV1(ctx context.Context, userId string, messageId int64) (*models.PersonalMessageV1, error)
 	EditMessageText(ctx context.Context, id, timestamp int64, text string) (newTimestamp int64, err error)
 	SetMessageReadState(ctx context.Context, id, timestamp int64, read bool) (newTimestamp int64, err error)
+	DeleteMessageData(ctx context.Context, id, timestamp int64) (newTimestamp int64, err error)
 }
 
 type FileStats interface {
