@@ -2,7 +2,6 @@ package data
 
 import (
 	"context"
-	"time"
 )
 
 type querySetMessageReadState struct{}
@@ -21,8 +20,7 @@ func (q querySetMessageReadState) text() string {
 	update_try AS (
 		UPDATE messages SET
 			event_timestamp = nextval('timeline'),
-			is_read = NULLIF($2, false),
-			edited = $4
+			is_read = NULLIF($2, false)
 		WHERE id = $3
 			AND COALESCE(is_deleted, false) = false
 			AND event_timestamp = $1
@@ -48,6 +46,6 @@ func (q querySetMessageReadState) text() string {
 }
 
 func (s *Storage) SetMessageReadState(ctx context.Context, id, timestamp int64, read bool) (newTimestamp int64, err error) {
-	newTimestamp, err = s.modifyMessage(ctx, querySetMessageReadState{}, timestamp, read, id, time.Now().UTC())
+	newTimestamp, err = s.modifyMessage(ctx, querySetMessageReadState{}, timestamp, read, id)
 	return newTimestamp, err
 }
