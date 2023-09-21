@@ -1,32 +1,30 @@
 package data
 
-import (
-	"context"
-	"time"
-)
+import "context"
 
-type querySetMessageReadState struct{}
+type queryDeleteMessageData struct{}
 
-func (q querySetMessageReadState) text() string {
+func (q queryDeleteMessageData) text() string {
 	return `
 	WITH update_constraints AS (
 		SELECT
 			COALESCE(is_deleted, false) AS message_deleted,
-			event_timestamp = $1 AS timestamp_match,
-			COALESCE(is_read, false) != $2 AS state_modified
+			event_timestamp = $1 AS timestamp_match
 		FROM messages
-		WHERE id = $3
+		WHERE id = $2
 		FOR UPDATE
 	),
 	update_try AS (
 		UPDATE messages SET
 			event_timestamp = nextval('timeline'),
-			is_read = NULLIF($2, false),
-			edited = $4
-		WHERE id = $3
+			created = null,
+			edited = null,
+			is_read = null,
+			message_text = null,
+			is_deleted = true
+		WHERE id = $2
 			AND COALESCE(is_deleted, false) = false
 			AND event_timestamp = $1
-			AND COALESCE(is_read, false) != $2
 		RETURNING
 			id AS id,
 			event_timestamp AS new_timestamp,
@@ -38,7 +36,7 @@ func (q querySetMessageReadState) text() string {
 		COALESCE(update_try.new_timestamp, 0) AS new_timestamp,
 		update_constraints.message_deleted AS message_deleted,
 		update_constraints.timestamp_match AS timestamp_match,
-		update_constraints.state_modified AS state_modified,
+		true AS message_modified,
 		COALESCE(update_try.sender, '') AS sender,
 		COALESCE(update_try.receiver, '') AS receiver
 	FROM update_constraints
@@ -47,7 +45,7 @@ func (q querySetMessageReadState) text() string {
 	`
 }
 
-func (s *Storage) SetMessageReadState(ctx context.Context, id, timestamp int64, read bool) (newTimestamp int64, err error) {
-	newTimestamp, err = s.modifyMessage(ctx, querySetMessageReadState{}, timestamp, read, id, time.Now().UTC())
+func (s *Storage) DeleteMessageData(ctx context.Context, id, timestamp int64) (newTimestamp int64, err error) {
+	newTimestamp, err = s.modifyMessage(ctx, queryDeleteMessageData{}, timestamp, id)
 	return newTimestamp, err
 }

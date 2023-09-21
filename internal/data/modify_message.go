@@ -5,16 +5,16 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"time"
 )
 
 type ErrMessageDeleted struct{}
 type ErrTimestampIsNotMatch struct{}
 type ErrMessageNotModified struct{}
 
-func (s *Storage) modifyMessage(ctx context.Context, id, timestamp int64, q query, arg any) (newTimestamp int64, err error) {
+func (s *Storage) modifyMessage(ctx context.Context, q query, args ...any) (newTimestamp int64, err error) {
 	var (
 		tx                                       *sql.Tx
+		id                                       int64
 		messageDeleted, timestampMatch, modified bool
 		sender, receiver                         string
 	)
@@ -27,8 +27,8 @@ func (s *Storage) modifyMessage(ctx context.Context, id, timestamp int64, q quer
 
 	defer tx.Rollback()
 
-	err = tx.Stmt(s.queries[q]).QueryRowContext(ctx, timestamp, arg, id, time.Now().UTC()).Scan(
-		&newTimestamp, &messageDeleted, &timestampMatch, &modified, &sender, &receiver,
+	err = tx.Stmt(s.queries[q]).QueryRowContext(ctx, args...).Scan(
+		&id, &newTimestamp, &messageDeleted, &timestampMatch, &modified, &sender, &receiver,
 	)
 
 	switch {

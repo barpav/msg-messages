@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"time"
 )
 
 type queryEditMessageText struct{}
@@ -27,11 +28,13 @@ func (q queryEditMessageText) text() string {
 			AND event_timestamp = $1
 			AND message_text != NULLIF($2, '')
 		RETURNING
+			id AS id,
 			event_timestamp AS new_timestamp,
 			sender AS sender,
 			receiver AS receiver
 	)
 	SELECT
+		COALESCE(update_try.id, 0) AS id,
 		COALESCE(update_try.new_timestamp, 0) AS new_timestamp,
 		update_constraints.message_deleted AS message_deleted,
 		update_constraints.timestamp_match AS timestamp_match,
@@ -45,6 +48,6 @@ func (q queryEditMessageText) text() string {
 }
 
 func (s *Storage) EditMessageText(ctx context.Context, id, timestamp int64, text string) (newTimestamp int64, err error) {
-	newTimestamp, err = s.modifyMessage(ctx, id, timestamp, queryEditMessageText{}, text)
+	newTimestamp, err = s.modifyMessage(ctx, queryEditMessageText{}, timestamp, text, id, time.Now().UTC())
 	return newTimestamp, err
 }

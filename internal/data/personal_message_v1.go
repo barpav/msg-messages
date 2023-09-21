@@ -64,6 +64,10 @@ func (s *Storage) PersonalMessageV1(ctx context.Context, userId string, messageI
 		return nil, err
 	}
 
+	if message.Deleted {
+		return message, nil
+	}
+
 	var rows *sql.Rows
 	rows, err = s.queries[queryGetPersonalMessageAttachmentsV1{}].QueryContext(ctx, messageId)
 

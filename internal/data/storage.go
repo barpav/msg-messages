@@ -31,6 +31,7 @@ func queriesToPrepare() []query {
 		queryGetPersonalMessageAttachmentsV1{},
 		queryEditMessageText{},
 		querySetMessageReadState{},
+		queryDeleteMessageData{},
 	}
 }
 
