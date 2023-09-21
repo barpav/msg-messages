@@ -71,7 +71,7 @@ services:
       storage-messages-v1:
         condition: service_healthy
       sessions-v1:
-        condition: service_healthy
+        condition: service_started
       broker:
         condition: service_healthy
 
