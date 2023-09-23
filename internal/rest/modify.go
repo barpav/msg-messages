@@ -127,6 +127,6 @@ func (s *Service) modifyMessage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("ETag", fmt.Sprintf("%d", newTimestamp))
+	w.Header()["ETag"] = []string{fmt.Sprintf("%d", newTimestamp)}
 	w.WriteHeader(http.StatusOK)
 }

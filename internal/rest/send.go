@@ -52,6 +52,6 @@ func (s *Service) sendPersonalMessageV1(w http.ResponseWriter, r *http.Request) 
 	}
 
 	w.Header().Set("Location", fmt.Sprintf("/%d", id))
-	w.Header().Set("ETag", fmt.Sprintf("%d", timestamp))
+	w.Header()["ETag"] = []string{fmt.Sprintf("%d", timestamp)}
 	w.WriteHeader(http.StatusCreated)
 }

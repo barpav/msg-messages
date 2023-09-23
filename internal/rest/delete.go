@@ -75,6 +75,6 @@ func (s *Service) deleteMessageData(w http.ResponseWriter, r *http.Request) {
 		}()
 	}
 
-	w.Header().Set("ETag", fmt.Sprintf("%d", newTimestamp))
+	w.Header()["ETag"] = []string{fmt.Sprintf("%d", newTimestamp)}
 	w.WriteHeader(http.StatusOK)
 }
