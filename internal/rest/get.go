@@ -37,6 +37,4 @@ func (s *Service) getMessageData(w http.ResponseWriter, r *http.Request) {
 		logAndReturnErrorWithIssue(w, r, err, "Failed to get message data (v1)")
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
 }

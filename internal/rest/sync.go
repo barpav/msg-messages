@@ -43,8 +43,6 @@ func (s *Service) getMessageUpdatesV1(w http.ResponseWriter, r *http.Request) {
 		logAndReturnErrorWithIssue(w, r, err, "Failed to get message updates (v1)")
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
 }
 
 func getMessageUpdatesV1Parameters(r *http.Request) (after int64, limit int, err error) {
