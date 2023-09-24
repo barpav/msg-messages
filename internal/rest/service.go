@@ -23,6 +23,7 @@ type Authenticator interface {
 	ValidateSession(ctx context.Context, key, ip, agent string) (userId string, err error)
 }
 
+//go:generate mockery --name Storage
 type Storage interface {
 	CreateNewPersonalMessageV1(ctx context.Context, sender string, data *models.NewPersonalMessageV1) (id int64, timestamp int64, err error)
 	MessageUpdatesV1(ctx context.Context, userId string, after int64, limit int) (*models.MessageUpdatesV1, error)
